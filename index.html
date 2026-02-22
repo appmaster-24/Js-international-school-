@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS International School - Kushinagar, UP</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<style>
+:root{
+  --navy:#0a1f5c;
+  --blue:#1a4db5;
+  --gold:#f0a500;
+  --gold-light:#ffd166;
+  --white:#fff;
+  --light:#f4f7ff;
+  --text:#2d3748;
+  --gray:#718096;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(240, 165, 0, 0.5); }
+  50% { box-shadow: 0 0 30px rgba(240, 165, 0, 0.8); }
+}
+
+/* Animation Classes */
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-bounce { animation: bounce 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spinSlow 8s linear infinite; }
+.animate-glow { animation: glow 2s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.2s; }
+.delay-2 { transition-delay: 0.4s; }
+.delay-3 { transition-delay: 0.6s; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  background: var(--navy);
+  color: #cce0ff;
+  padding: 8px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.topbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.topbar a {
+  color: var(--gold-light);
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.topbar a:hover {
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  background: #fff;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 5%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slideInLeft 0.8s ease;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+  animation: float 3s ease-in-out infinite;
+}
+
+.logo-icon::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+.logo-text .school-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.logo-text .school-sub {
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  gap: 26px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  padding-bottom: 4px;
+  transition: color .2s;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gold);
+  transition: width .3s;
+}
+
+.nav-links a:hover {
+  color: var(--blue);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.dd {
+  position: relative;
+}
+
+.dd-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  min-width: 180px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 999;
+  animation: scaleIn 0.3s ease;
+}
+
+.dd:hover .dd-menu {
+  display: block;
+}
+
+.dd-menu a {
+  display: block;
+  padding: 10px 17px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s;
+}
+
+.dd-menu a:last-child {
+  border: none;
+}
+
+.dd-menu a:hover {
+  background: var(--light);
+  padding-left: 25px;
+  color: var(--blue);
+}
+
+.nav-admit-btn {
+  background: linear-gradient(135deg, var(--gold), #e69500);
+  color: var(--navy);
+  padding: 10px 22px;
+  border-radius: 25px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 4px 15px rgba(240,165,0,.35);
+  transition: all .3s;
+  cursor: pointer;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-admit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.nav-admit-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(240,165,0,.5);
+}
+
+.nav-admit-btn:hover::before {
+  left: 100%;
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  height: 560px;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+.slides-track {
+  display: flex;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  height: 560px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.slide-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 10s ease;
+}
+
+.slide:hover .slide-bg {
+  transform: scale(1.1);
+}
+
+.slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(10,31,92,.85), rgba(10,31,92,.35));
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 0 8%;
+  max-width: 640px;
+  animation: slideInLeft 1s ease;
+}
+
+.slide-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.slide-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  animation: slideInLeft 1s ease 0.2s both;
+}
+
+.slide-content p {
+  font-size: 17px;
+  opacity: .85;
+  margin-bottom: 26px;
+  animation: slideInLeft 1s ease 0.4s both;
+}
+
+.btn-hero {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 15px;
+  display: inline-block;
+  transition: all .3s;
+  box-shadow: 0 8px 24px rgba(240,165,0,.4);
+  cursor: pointer;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  position: relative;
+  overflow: hidden;
+  animation: slideInLeft 1s ease 0.6s both;
+}
+
+.btn-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-hero:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: var(--gold-light);
+}
+
+.btn-hero:hover::before {
+  left: 100%;
+}
+
+.arr {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.arr:hover {
+  background: var(--gold);
+  color: var(--navy);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.arr-l {
+  left: 18px;
+}
+
+.arr-r {
+  right: 18px;
+}
+
+.dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.4);
+  cursor: pointer;
+  border: none;
+  transition: all .3s;
+}
+
+.dot.active {
+  background: var(--gold);
+  width: 26px;
+  border-radius: 5px;
+}
+
+.dot:hover {
+  background: var(--gold);
+  transform: scale(1.2);
+}
+
+/* ===== TICKER ===== */
+.ticker-wrap {
+  background: var(--gold);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-wrap::before,
+.ticker-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ticker-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.ticker-wrap::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--gold), transparent);
+}
+
+.ticker-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: tick 35s linear infinite;
+  gap: 80px;
+}
+
+.ticker-inner span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.ticker-inner span::before {
+  content: '✨';
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes tick {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== SECTIONS ===== */
+section {
+  padding: 72px 5%;
+  position: relative;
+  overflow: hidden;
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.sec-title {
+  text-align: center;
+  margin-bottom: 46px;
+  position: relative;
+}
+
+.sec-tag {
+  display: inline-block;
+  background: var(--light);
+  color: var(--blue);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sec-tag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.sec-title h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--navy);
+  position: relative;
+  display: inline-block;
+}
+
+.sec-title h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sec-title p {
+  color: var(--gray);
+  margin-top: 9px;
+  font-size: 15px;
+  max-width: 580px;
+  margin-inline: auto;
+}
+
+/* ===== ABOUT ===== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.about-img-box {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 110px;
+  box-shadow: 0 20px 56px rgba(26,77,181,.2);
+  background-size: cover;
+  background-position: center;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+  animation: float 6s ease-in-out infinite;
+}
+
+.about-img-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.about-img-box:hover::before {
+  left: 100%;
+}
+
+.about-img-box:hover {
+  transform: scale(1.02) translateY(-5px);
+  box-shadow: 0 30px 70px rgba(26,77,181,.3);
+}
+
+.about-badge-box {
+  position: absolute;
+  bottom: -18px;
+  right: -16px;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 16px 22px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 8px 22px rgba(240,165,0,.4);
+  line-height: 1.3;
+  text-align: center;
+  animation: float 4s ease-in-out infinite;
+}
+
+.about-badge-box .num {
+  font-size: 30px;
+  font-family: 'Playfair Display', serif;
+}
+
+.about-text {
+  animation: slideInRight 1s ease;
+}
+
+.about-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: var(--navy);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.about-text h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.about-text p {
+  color: var(--gray);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+.about-text p:hover {
+  transform: translateX(5px);
+  color: var(--text);
+}
+
+.about-text .btn-link {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  padding: 11px 26px;
+  border-radius: 30px;
+  font-weight: 700;
+  margin-top: 10px;
+  transition: all .3s;
+  cursor: pointer;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-text .btn-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.about-text .btn-link:hover {
+  background: var(--navy);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.about-text .btn-link:hover::before {
+  left: 100%;
+}
+
+/* ===== STATS ===== */
+.stats-section {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%);
+  background-size: 20px 20px;
+  animation: spinSlow 20s linear infinite;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.stats-grid > div {
+  animation: scaleIn 0.5s ease;
+  animation-fill-mode: both;
+}
+
+.stats-grid > div:nth-child(1) { animation-delay: 0.1s; }
+.stats-grid > div:nth-child(2) { animation-delay: 0.2s; }
+.stats-grid > div:nth-child(3) { animation-delay: 0.3s; }
+.stats-grid > div:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.stats-grid > div:hover .stat-num {
+  transform: scale(1.2) translateY(-5px);
+  text-shadow: 0 10px 20px rgba(240,165,0,0.3);
+}
+
+.stat-lbl {
+  font-size: 13px;
+  opacity: .65;
+  margin-top: 7px;
+  font-weight: 600;
+  color: white;
+}
+
+/* ===== EVENTS ===== */
+.events-section {
+  background: var(--light);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.event-card {
+  background: white;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.06);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  animation: scaleIn 0.5s ease;
+  animation-fill-mode: both;
+}
+
+.event-card:nth-child(1) { animation-delay: 0.1s; }
+.event-card:nth-child(2) { animation-delay: 0.2s; }
+.event-card:nth-child(3) { animation-delay: 0.3s; }
+
+.event-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--gold);
+  transition: height 0.3s;
+}
+
+.event-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+}
+
+.event-card:hover::before {
+  height: 100%;
+}
+
+.event-icon {
+  font-size: 26px;
+  transition: all 0.3s;
+  animation: float 3s ease-in-out infinite;
+}
+
+.event-card:hover .event-icon {
+  transform: scale(1.2) rotate(360deg);
+}
+
+.event-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 5px;
+  transition: color 0.3s;
+}
+
+.event-card:hover h4 {
+  color: var(--blue);
+}
+
+.event-card p {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* ===== QUOTE ===== */
+.quote-sec {
+  background: linear-gradient(135deg, var(--navy), #1a3a8f);
+  text-align: center;
+  color: white;
+  padding: 72px 10%;
+  position: relative;
+  overflow: hidden;
+}
+
+.quote-sec::before {
+  content: '"';
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 200px;
+  font-family: 'Playfair Display', serif;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite;
+}
+
+.quote-sec::after {
+  content: '"';
+  position: absolute;
+  bottom: 20%;
+  right: 10%;
+  font-size: 200px;
+  font-family: 'Playfair Display', serif;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite reverse;
+}
+
+.quote-sec blockquote {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  line-height: 1.65;
+  max-width: 780px;
+  margin: 0 auto 22px;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 1s ease;
+}
+
+.quote-sec cite {
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  font-style: normal;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ===== FACILITIES ===== */
+.fac-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.fac-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 22px rgba(0,0,0,.07);
+  transition: all 0.3s;
+  animation: scaleIn 0.5s ease;
+  animation-fill-mode: both;
+}
+
+.fac-card:nth-child(1) { animation-delay: 0.1s; }
+.fac-card:nth-child(2) { animation-delay: 0.2s; }
+.fac-card:nth-child(3) { animation-delay: 0.3s; }
+
+.fac-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 40px rgba(0,0,0,0.1);
+}
+
+.fac-thumb {
+  height: 190px;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+}
+
+.fac-thumb::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.fac-card:hover .fac-thumb::before {
+  left: 100%;
+}
+
+.fac-card:hover .fac-thumb {
+  transform: scale(1.1);
+}
+
+.fac-thumb i, .fac-thumb span {
+  animation: float 3s ease-in-out infinite;
+}
+
+.fac-body {
+  padding: 20px;
+  transition: all 0.3s;
+}
+
+.fac-card:hover .fac-body {
+  background: var(--light);
+}
+
+.fac-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 7px;
+  transition: color 0.3s;
+}
+
+.fac-card:hover .fac-body h3 {
+  color: var(--blue);
+}
+
+.fac-body p {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testi-sec {
+  background: var(--light);
+}
+
+.testi-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testi-card {
+  background: white;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 8px 36px rgba(0,0,0,.08);
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.testi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--navy), var(--gold), var(--navy));
+  animation: shimmer 3s infinite;
+}
+
+.testi-card.active {
+  display: block;
+  animation: fadeInUp 0.5s ease;
+}
+
+.qm {
+  font-size: 56px;
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  line-height: .5;
+  margin-bottom: 18px;
+  display: block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.testi-card p {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.t-author {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.t-role {
+  font-size: 12px;
+  color: var(--gray);
+}
+
+.testi-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.tdot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ddd;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.tdot.active {
+  background: var(--blue);
+  width: 26px;
+  border-radius: 5px;
+}
+
+.tdot:hover {
+  background: var(--gold);
+  transform: scale(1.2);
+}
+
+/* ===== CTA ===== */
+.cta-sec {
+  background: linear-gradient(135deg, #f0a500, #e69500);
+  padding: 60px 5%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-sec::before {
+  content: '🎓';
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  font-size: 80px;
+  opacity: 0.1;
+  animation: float 4s ease-in-out infinite;
+}
+
+.cta-sec::after {
+  content: '📚';
+  position: absolute;
+  bottom: 20%;
+  right: 10%;
+  font-size: 80px;
+  opacity: 0.1;
+  animation: float 4s ease-in-out infinite reverse;
+}
+
+.cta-sec h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  color: var(--navy);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.cta-sec p {
+  color: rgba(10,31,92,.75);
+  font-size: 16px;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-btn {
+  background: var(--navy);
+  color: white;
+  padding: 15px 40px;
+  border-radius: 35px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  transition: all .3s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+
+.cta-btn:hover::before {
+  left: 100%;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #060f2e;
+  color: rgba(255,255,255,.7);
+  padding: 56px 5% 0;
+  position: relative;
+  overflow: hidden;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 36px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-bottom: 46px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.footer-school-name {
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  margin-bottom: 12px;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-school-name::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.footer-grid p {
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+.footer-col h4 {
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 9px;
+}
+
+.footer-col ul li a {
+  font-size: 13px;
+  transition: all .2s;
+  display: inline-block;
+}
+
+.footer-col ul li a:hover {
+  color: var(--gold);
+  transform: translateX(5px);
+}
+
+.ct-item {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.ct-item:hover {
+  transform: translateX(5px);
+  color: white;
+}
+
+.ct-ic {
+  color: var(--gold);
+  font-size: 15px;
+  margin-top: 2px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 18px;
+  font-size: 12px;
+}
+
+.footer-bottom a {
+  color: var(--gold);
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.footer-bottom a:hover {
+  transform: translateY(-2px);
+  text-decoration: underline;
+}
+
+.empty-ph {
+  text-align: center;
+  padding: 36px;
+  color: var(--gray);
+  font-size: 14px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ADMISSION MODAL ===== */
+.adm-ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,31,92,0.65);
+  z-index: 5000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+
+.adm-ov.open {
+  display: flex;
+}
+
+.adm-modal {
+  background: white;
+  width: 100%;
+  max-width: 580px;
+  max-height: 94vh;
+  overflow-y: auto;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -20px 70px rgba(0,0,0,.3);
+  animation: admUp 0.35s cubic-bezier(.22,.68,0,1.2);
+}
+
+@keyframes admUp {
+  from {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.adm-head {
+  padding: 22px 26px 18px;
+  background: linear-gradient(135deg, var(--navy), #1a3a8f);
+  color: white;
+  border-radius: 22px 22px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.adm-head::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.adm-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.adm-head p {
+  font-size: 12px;
+  opacity: .7;
+  margin-top: 4px;
+}
+
+.adm-x {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s;
+}
+
+.adm-x:hover {
+  background: rgba(255,255,255,.28);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.adm-body {
+  padding: 26px;
+}
+
+.adm-step {
+  display: none;
+}
+
+.adm-step.active {
+  display: block;
+  animation: fadeUp 0.35s ease;
+}
+
+/* Step indicator */
+.step-ind {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-bottom: 26px;
+}
+
+.sdot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: var(--gray);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.sdot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.sdot.done {
+  background: #38a169;
+  color: white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sdot.cur {
+  background: var(--navy);
+  color: white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sline {
+  flex: 1;
+  height: 3px;
+  background: #e2e8f0;
+  margin-top: 14px;
+  transition: background .3s;
+}
+
+.sline.done {
+  background: #38a169;
+}
+
+.slbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray);
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* Fields */
+.ag {
+  display: grid;
+  gap: 14px;
+}
+
+.ag2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.af label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.af input,
+.af select,
+.af textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  transition: all .2s;
+  background: white;
+}
+
+.af input:focus,
+.af select:focus {
+  outline: none;
+  border-color: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(26,77,181,0.1);
+}
+
+.af.err input,
+.af.err select {
+  border-color: #e53e3e;
+  animation: pulse 0.5s ease;
+}
+
+.af-err {
+  color: #e53e3e;
+  font-size: 11px;
+  margin-top: 4px;
+  display: none;
+}
+
+.af.err .af-err {
+  display: block;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 4px;
+}
+
+/* Nav buttons */
+.adm-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.adm-btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.adm-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.adm-btn:hover::before {
+  left: 100%;
+}
+
+.adm-btn-pri {
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: white;
+}
+
+.adm-btn-pri:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(10,31,92,0.2);
+}
+
+.adm-btn-pri:disabled {
+  opacity: .5;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.adm-btn-sec {
+  background: var(--light);
+  color: var(--navy);
+}
+
+.adm-btn-sec:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+/* Success */
+.adm-success {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.adm-success .si {
+  font-size: 64px;
+  margin-bottom: 14px;
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.adm-success h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.adm-success p {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.ref-box {
+  background: var(--light);
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin: 18px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Closed banner */
+.adm-closed {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.adm-closed .ci {
+  font-size: 56px;
+  margin-bottom: 14px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.adm-closed h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.adm-closed p {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Media Queries */
+@media(max-width: 768px) {
+  .nav-links { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .events-grid { grid-template-columns: 1fr; }
+  .fac-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .slide-content h1 { font-size: 28px; }
+  .hero { height: 380px; }
+  .slide { height: 380px; }
+  .ag2 { grid-template-columns: 1fr; }
+  .quote-sec blockquote { font-size: 18px; }
+  .cta-sec h2 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>📞 <a id="tb-phone" href="tel:+918299763358">+91 8299763358</a> &nbsp;|&nbsp; ✉️ <a id="tb-email" href="mailto:jsisgkp@gmail.com">jsisgkp@gmail.com</a></div>
+  <div>📍 Benduar Ahirauli Bazar, Kushinagar, UP</div>
+</div>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">JS</div>
+    <div class="logo-text">
+      <div class="school-name">JS International School</div>
+      <div class="school-sub">Under the Aegis of Janki Shankar Trust</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li class="dd"><a href="#">About ▾</a>
+      <div class="dd-menu">
+        <a href="#">About Us</a><a href="#">Director's Message</a>
+        <a href="#">Chairman's Message</a><a href="#">Principal's Message</a><a href="#">Mission & Vision</a>
+      </div>
+    </li>
+    <li class="dd"><a href="#">Admission ▾</a>
+      <div class="dd-menu">
+        <a href="#" onclick="openAdmission();return false;">Online Apply</a>
+        <a href="#">Fee Structure</a><a href="#">Curriculum</a>
+      </div>
+    </li>
+    <li><a href="#">Facilities</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <button class="nav-admit-btn" onclick="openAdmission()">📋 Apply for Admission</button>
+</nav>
+
+<div class="hero">
+  <div class="slides-track" id="slidesTrack">
+    <div class="slide">
+      <div class="slide-bg" style="background:linear-gradient(135deg,#0a1f5c,#1a4db5);"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-badge" id="hero-default-badge">🎉 Admissions Open 2025-26</span>
+        <h1>Nurturing Young Minds for a Brighter Tomorrow</h1>
+        <p>Quality education from Pre-Nursery to Class 8th</p>
+        <button class="btn-hero" onclick="openAdmission()">Apply Now →</button>
+      </div>
+    </div>
+  </div>
+  <button class="arr arr-l" onclick="slideChange(-1)">‹</button>
+  <button class="arr arr-r" onclick="slideChange(1)">›</button>
+  <div class="dots" id="slideDots"><button class="dot active"></button></div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span>📢 ADMISSIONS OPEN 2025-26 FOR PRE-NURSERY TO CLASS 8TH</span>
+    <span>📅 ENTRANCE TEST WILL BE HELD IN JUNE</span>
+    <span>🎉 SCHOOL ANNUAL DAY ON 20TH MAY</span>
+    <span>📢 ADMISSIONS OPEN 2025-26 FOR PRE-NURSERY TO CLASS 8TH</span>
+    <span>📅 ENTRANCE TEST WILL BE HELD IN JUNE</span>
+    <span>🎉 SCHOOL ANNUAL DAY ON 20TH MAY</span>
+  </div>
+</div>
+
+<section style="background:white;">
+  <div class="about-grid">
+    <div style="position:relative;" class="scroll-reveal">
+      <div class="about-img-box" id="about-img-box">🏫</div>
+      <div class="about-badge-box">
+        <div class="num" id="ab-years">10+</div>
+        <span id="ab-badge">Years of<br>Excellence</span>
+      </div>
+    </div>
+    <div class="about-text scroll-reveal delay-1">
+      <h2 id="ab-heading">About JS International School</h2>
+      <p id="ab-p1">JS International School is a progressive and forward-thinking educational institution that places a strong emphasis on academic excellence, character development, and the overall well-being of every student.</p>
+      <p id="ab-p2">We believe that each child is unique and full of potential. Our learner-centered approach ensures that students are active participants in their own learning journey.</p>
+      <p id="ab-p3">Our curriculum aligns with international standards while staying rooted in strong moral, ethical, and cultural values.</p>
+      <button class="btn-link" onclick="openAdmission()">Apply Now →</button>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="stats-grid" id="statsGrid">
+    <div><div class="stat-num">500+</div><div class="stat-lbl">Enrolled Students</div></div>
+    <div><div class="stat-num">10+</div><div class="stat-lbl">Years Experience</div></div>
+    <div><div class="stat-num">30+</div><div class="stat-lbl">Certified Teachers</div></div>
+    <div><div class="stat-num">6+</div><div class="stat-lbl">Library & Labs</div></div>
+  </div>
+</section>
+
+<section class="events-section">
+  <div class="sec-title scroll-reveal">
+    <span class="sec-tag">📅 Updates</span>
+    <h2>Upcoming Events & Notices</h2>
+    <p>Stay informed about the latest happenings at JS International School</p>
+  </div>
+  <div class="events-grid" id="eventsGrid"><div class="empty-ph">Loading events...</div></div>
+</section>
+
+<div class="quote-sec">
+  <blockquote class="scroll-reveal">"We strive to empower our students to think independently, act with integrity, and grow into confident, compassionate individuals ready to lead the future."</blockquote>
+  <cite class="scroll-reveal delay-1">— Jitendra Kumar Jaiswal, Chairman</cite>
+</div>
+
+<section>
+  <div class="sec-title scroll-reveal">
+    <span class="sec-tag">🏛 Infrastructure</span>
+    <h2>Academic & Learning Facilities</h2>
+    <p>State-of-the-art facilities designed to enhance learning and student development</p>
+  </div>
+  <div class="fac-grid" id="facGrid"><div class="empty-ph">Loading...</div></div>
+</section>
+
+<section class="testi-sec">
+  <div class="sec-title scroll-reveal">
+    <span class="sec-tag">💬 Testimonials</span>
+    <h2>What Parents & Students Say</h2>
+  </div>
+  <div class="testi-wrap">
+    <div id="testiCards"><div class="empty-ph">Loading...</div></div>
+    <div class="testi-dots" id="testiDots"></div>
+  </div>
+</section>
+
+<div class="cta-sec">
+  <h2 id="cta-heading" class="animate-float">🎓 Admissions Open 2025–26</h2>
+  <p id="cta-text">Apne bacche ka ujjwal bhavishya hamare saath shuru karein. Abhi online apply karein!</p>
+  <button class="cta-btn" id="cta-btn" onclick="openAdmission()">📋 Abhi Apply Karein — Free!</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="scroll-reveal">
+      <div class="footer-school-name">JS International School</div>
+      <p>At JS International School, we nurture young minds with quality education, strong values, and a vision for the future.</p>
+      <div style="display:flex;gap:10px;">
+        <a id="ft-fb" href="#" style="color:var(--gold);font-size:20px;">📘</a>
+        <a id="ft-ig" href="#" style="color:var(--gold);font-size:20px;">📷</a>
+      </div>
+    </div>
+    <div class="footer-col scroll-reveal delay-1">
+      <h4>About School</h4>
+      <ul>
+        <li><a href="#">About Us</a></li><li><a href="#">Director's Desk</a></li>
+        <li><a href="#" onclick="openAdmission();return false;">Online Admission</a></li>
+        <li><a href="#">Mission & Vision</a></li><li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col scroll-reveal delay-2">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#" onclick="openAdmission();return false;">Apply Online</a></li>
+        <li><a href="#">Fee Structure</a></li>
+        <li><a href="#">School Gallery</a></li><li><a href="#">Our Facilities</a></li>
+      </ul>
+    </div>
+    <div class="footer-col scroll-reveal delay-3">
+      <h4>Contact Us</h4>
+      <div class="ct-item"><span class="ct-ic">📍</span><span id="ft-addr">Benduar Ahirauli Bazar Kushinagar, UP - 274402</span></div>
+      <div class="ct-item"><span class="ct-ic">📞</span><a id="ft-phone" href="tel:+918299763358" style="color:inherit;">+91 8299763358</a></div>
+      <div class="ct-item"><span class="ct-ic">✉️</span><a id="ft-email" href="mailto:jsisgkp@gmail.com" style="color:inherit;">jsisgkp@gmail.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>Copyright © 2025 JS International School | Developed by <a href="https://innoricsystems.com/" target="_blank">Innoric Infosystems</a></p>
+  </div>
+</footer>
+
+<div class="adm-ov" id="admOv">
+  <div class="adm-modal">
+    <div class="adm-head">
+      <div>
+        <h2 id="adm-modal-title">📋 Admission Form 2025–26</h2>
+        <p>JS International School — Kushinagar</p>
+      </div>
+      <button class="adm-x" onclick="closeAdmission()">✕</button>
+    </div>
+    <div class="adm-body" id="admBody">
+      </div>
+  </div>
+</div>
+
+<script>
+// ── FIREBASE ──
+const firebaseConfig={
+  apiKey: "AIzaSyBBNheH5HU2jf-vs2X9BdB2-nvlHhMrw5Q",
+  authDomain: "rahees-23c0c.firebaseapp.com",
+  projectId: "rahees-23c0c",
+  storageBucket: "rahees-23c0c.firebasestorage.app",
+  messagingSenderId: "162692769850",
+  appId: "1:162692769850:web:278bb1baf0dd0ca6d4ed03"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+// ── SCROLL REVEAL ──
+const revealElements = document.querySelectorAll('.scroll-reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+// ── SLIDER ──
+let sIdx = 0, sTotal = 1, sTimer = setInterval(() => slideChange(1), 5000);
+function slideChange(d) {
+  sIdx = (sIdx + d + sTotal) % sTotal;
+  slideUpdate();
+}
+function slideGoTo(i) {
+  sIdx = i;
+  slideUpdate();
+}
+function slideUpdate() {
+  document.getElementById('slidesTrack').style.transform = `translateX(-${sIdx * 100}%)`;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === sIdx));
+}
+db.collection('slides').onSnapshot(snap => {
+  const data = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (+a.order || 0) - (+b.order || 0));
+  if (!data.length) return;
+  sTotal = data.length;
+  document.getElementById('slidesTrack').innerHTML = data.map(s => {
+    const bg = s.imgUrl ? `background-image:url('${s.imgUrl}');background-size:cover;background-position:center;` : `background:${s.bgColor || 'linear-gradient(135deg,#0a1f5c,#1a4db5)'};`;
+    return `<div class="slide"><div class="slide-bg" style="${bg}"></div><div class="slide-overlay"></div><div class="slide-content">${s.badge ? `<span class="slide-badge">${s.badge}</span>` : ''}<h1>${s.heading || ''}</h1><p>${s.subtext || ''}</p><button class="btn-hero" onclick="openAdmission()">${s.btnText || 'Apply Now →'}</button></div></div>`;
+  }).join('');
+  document.getElementById('slideDots').innerHTML = data.map((_, i) => `<button class="dot${i === 0 ? ' active' : ''}" onclick="slideGoTo(${i})"></button>`).join('');
+  clearInterval(sTimer);
+  sTimer = setInterval(() => slideChange(1), 5000);
+  sIdx = 0;
+  slideUpdate();
+});
+
+// ── TICKER ──
+db.collection('ticker').onSnapshot(snap => {
+  const items = snap.docs.map(d => d.data().text).filter(Boolean);
+  if (!items.length) return;
+  const doubled = [...items, ...items];
+  document.getElementById('tickerInner').innerHTML = doubled.map(t => `<span>${t}</span>`).join('');
+});
+
+// ── EVENTS ──
+db.collection('events').onSnapshot(snap => {
+  const data = snap.docs.map(d => ({ ...d.data() }));
+  const el = document.getElementById('eventsGrid');
+  if (!data.length) {
+    el.innerHTML = '<div class="empty-ph">Koi event nahi hai abhi</div>';
+    return;
+  }
+  el.innerHTML = data.map(e => `<div class="event-card"><div class="event-icon">${e.icon || '📌'}</div><div><h4>${e.title || ''}</h4><p>${e.description || ''}</p></div></div>`).join('');
+});
+
+// ── STATS ──
+db.collection('stats').onSnapshot(snap => {
+  const data = snap.docs.map(d => d.data());
+  if (!data.length) return;
+  document.getElementById('statsGrid').innerHTML = data.map(s => `<div><div class="stat-num">${s.number || 0}+</div><div class="stat-lbl">${s.label || ''}</div></div>`).join('');
+});
+
+// ── FACILITIES ──
+db.collection('facilities').onSnapshot(snap => {
+  const data = snap.docs.map(d => d.data());
+  const el = document.getElementById('facGrid');
+  if (!data.length) {
+    el.innerHTML = '<div class="empty-ph">Loading...</div>';
+    return;
+  }
+  el.innerHTML = data.map(f => `<div class="fac-card"><div class="fac-thumb">${f.icon || '🏛️'}</div><div class="fac-body"><h3>${f.name || ''}</h3><p>${f.description || ''}</p></div></div>`).join('');
+});
+
+// ── TESTIMONIALS ──
+let tIdx = 0, tTotal = 0, tTimer;
+db.collection('testimonials').onSnapshot(snap => {
+  const data = snap.docs.map(d => d.data());
+  if (!data.length) return;
+  tTotal = data.length;
+  document.getElementById('testiCards').innerHTML = data.map((t, i) => `<div class="testi-card${i === 0 ? ' active' : ''}"><span class="qm">"</span><p>${t.quote || ''}</p><div class="t-author">${t.author || ''}</div><div class="t-role">${t.role || ''}</div></div>`).join('');
+  document.getElementById('testiDots').innerHTML = data.map((_, i) => `<button class="tdot${i === 0 ? ' active' : ''}" onclick="testiGo(${i})"></button>`).join('');
+  tIdx = 0;
+  clearInterval(tTimer);
+  tTimer = setInterval(() => testiGo((tIdx + 1) % tTotal), 4500);
+});
+function testiGo(i) {
+  document.querySelectorAll('.testi-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tdot').forEach((d, j) => d.classList.toggle('active', j === i));
+  const cards = document.querySelectorAll('.testi-card');
+  if (cards[i]) cards[i].classList.add('active');
+  tIdx = i;
+}
+
+// ── ABOUT ──
+db.collection('about').limit(1).onSnapshot(snap => {
+  if (snap.empty) return;
+  const d = snap.docs[0].data();
+  if (d.heading) document.getElementById('ab-heading').textContent = d.heading;
+  if (d.p1) document.getElementById('ab-p1').textContent = d.p1;
+  if (d.p2) document.getElementById('ab-p2').textContent = d.p2;
+  if (d.p3) document.getElementById('ab-p3').textContent = d.p3;
+  if (d.years) document.getElementById('ab-years').textContent = d.years + '+';
+  if (d.badge) document.getElementById('ab-badge').innerHTML = d.badge;
+  const box = document.getElementById('about-img-box');
+  if (box && d.imgUrl) {
+    box.style.backgroundImage = `url('${d.imgUrl}')`;
+    box.style.backgroundSize = 'cover';
+    box.style.backgroundPosition = 'center';
+    box.textContent = '';
+  }
+});
+
+// ── CONTACT ──
+db.collection('contact').limit(1).onSnapshot(snap => {
+  if (snap.empty) return;
+  const d = snap.docs[0].data();
+  if (d.phone) {
+    ['tb-phone', 'ft-phone'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = d.phone;
+        el.href = 'tel:' + d.phone.replace(/\s/g, '');
+      }
+    });
+  }
+  if (d.email) {
+    ['tb-email', 'ft-email'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = d.email;
+        el.href = 'mailto:' + d.email;
+      }
+    });
+  }
+  if (d.address) {
+    const el = document.getElementById('ft-addr');
+    if (el) el.textContent = d.address;
+  }
+  if (d.facebook) {
+    const el = document.getElementById('ft-fb');
+    if (el) el.href = d.facebook;
+  }
+  if (d.instagram) {
+    const el = document.getElementById('ft-ig');
+    if (el) el.href = d.instagram;
+  }
+});
+
+// ── SETTINGS (Admission Year & Status) ──
+let _admSettings = {
+  status: 'open',
+  year: '2025-26',
+  classes: 'Pre-Nursery to Class 8th',
+  badge: '🎉 Admissions Open 2025-26',
+  formTitle: 'Admission Form 2025–26',
+  ctaHeading: '🎓 Admissions Open 2025–26',
+  ctaText: 'Apne bacche ka ujjwal bhavishya hamare saath shuru karein. Abhi online apply karein!',
+  ctaBtn: '📋 Abhi Apply Karein — Free!'
+};
+
+db.collection('settings').doc('admission').onSnapshot(snap => {
+  if (!snap.exists) return;
+  const d = snap.data();
+  _admSettings = { ..._admSettings, ...d };
+  // Update CTA section
+  const ch = document.getElementById('cta-heading');
+  if (ch && d.ctaHeading) ch.textContent = d.ctaHeading;
+  const ct = document.getElementById('cta-text');
+  if (ct && d.ctaText) ct.textContent = d.ctaText;
+  const cb = document.getElementById('cta-btn');
+  if (cb && d.ctaBtn) cb.textContent = d.ctaBtn;
+  // Update default slide badge
+  const hb = document.getElementById('hero-default-badge');
+  if (hb && d.badge) hb.textContent = d.badge;
+  // Update admission modal title
+  const mt = document.getElementById('adm-modal-title');
+  if (mt && d.formTitle) mt.textContent = '📋 ' + d.formTitle;
+});
+
+// ═══════════════════════════════════════════
+//  ADMISSION FORM (Certificate Step Removed)
+// ═══════════════════════════════════════════
+let _step = 1;
+let _formData = {};
+
+function openAdmission() {
+  if (_admSettings.status === 'closed') {
+    renderClosedScreen();
+    document.getElementById('admOv').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    return;
+  }
+  renderFormStep(1);
+  document.getElementById('admOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAdmission() {
+  document.getElementById('admOv').classList.remove('open');
+  document.body.style.overflow = '';
+  _step = 1;
+}
+document.getElementById('admOv').addEventListener('click', function(e) {
+  if (e.target === this) closeAdmission();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAdmission();
+});
+
+function renderClosedScreen() {
+  const phone = document.getElementById('ft-phone')?.textContent || '+91 8299763358';
+  document.getElementById('admBody').innerHTML = `
+    <div class="adm-closed">
+      <div class="ci">🔒</div>
+      <h3>Admissions Filhal Band Hain</h3>
+      <p>Is samay JS International School mein admissions band hain.<br>Agle session ki jankari ke liye school se sampark karein.</p>
+      <div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="tel:${phone.replace(/\s/g, '')}" style="background:var(--blue);color:white;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;display:inline-block;">📞 Call Karein</a>
+        <button onclick="closeAdmission()" style="background:var(--light);color:var(--navy);padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;">Close</button>
+      </div>
+    </div>`;
+}
+
+// --- Auto Age Calculation Logic ---
+function calculateAge() {
+  const dobVal = document.getElementById('dob').value;
+  if (!dobVal) return;
+  const dob = new Date(dobVal);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  document.getElementById('age').value = age;
+}
+
+function renderFormStep(step) {
+  _step = step;
+  const classOpts = ['Pre-Nursery', 'Nursery', 'KG-1', 'KG-2', 'Class 1st', 'Class 2nd', 'Class 3rd', 'Class 4th', 'Class 5th', 'Class 6th', 'Class 7th', 'Class 8th'];
+
+  const stepDots = `
+    <div class="step-ind">
+      ${[1, 2, 3].map((n, i) => `
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="sdot ${n < step ? 'done' : n === step ? 'cur' : ''}">${n < step ? '✓' : n}</div>
+          <div class="slbl">${['Baccha', 'Parents', 'Submit'][i]}</div>
+        </div>
+        ${n < 3 ? `<div class="sline ${n < step ? 'done' : ''}"></div>` : ''}
+      `).join('')}
+    </div>`;
+
+  let content = '';
+
+  if (step === 1) {
+    content = `
+      <div class="adm-step active" id="step-wrap">
+        ${stepDots}
+        <div style="font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--light);">👦 Bacche ki Jankari</div>
+        <div class="ag ag2">
+          <div class="af" id="f-childName"><label>Bacche ka Poora Naam *</label><input type="text" id="childName" value="${_formData.childName || ''}" placeholder="Rahul Kumar"><div class="af-err">Naam zaroori hai</div></div>
+          <div class="af" id="f-dob"><label>Date of Birth *</label><input type="date" id="dob" value="${_formData.dob || ''}" onchange="calculateAge()"><div class="af-err">DOB zaroori hai</div></div>
+          <div class="af" id="f-age"><label>Age (Umar) *</label><input type="number" id="age" value="${_formData.age || ''}" placeholder="Bacche ki umar"><div class="af-err">Umar zaroori hai</div></div>
+          <div class="af" id="f-gender"><label>Gender *</label><select id="gender"><option value="">— Select —</option><option ${_formData.gender === 'Male (Ladka)' ? 'selected' : ''}>Male (Ladka)</option><option ${_formData.gender === 'Female (Ladki)' ? 'selected' : ''}>Female (Ladki)</option></select><div class="af-err">Gender select karein</div></div>
+          <div class="af" id="f-applyingClass"><label>Admission Class *</label><select id="applyingClass"><option value="">— Class select karein —</option>${classOpts.map(c => `<option ${_formData.applyingClass === c ? 'selected' : ''}>${c}</option>`).join('')}</select><div class="af-err">Class select karein</div></div>
+          <div class="af"><label>Pichli School (optional)</label><input type="text" id="prevSchool" value="${_formData.prevSchool || ''}" placeholder="Pichli school ka naam"></div>
+        </div>
+        <div class="adm-nav">
+          <button class="adm-btn adm-btn-pri" onclick="nextStep(1)">Aage Badhein →</button>
+        </div>
+      </div>`;
+  } else if (step === 2) {
+    content = `
+      <div class="adm-step active" id="step-wrap">
+        ${stepDots}
+        <div style="font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--light);">👨‍👩‍👦 Guardian ki Jankari</div>
+        <div class="ag ag2">
+          <div class="af" id="f-guardianName"><label>Guardian ka Naam *</label><input type="text" id="guardianName" value="${_formData.guardianName || ''}" placeholder="Ramesh Kumar"><div class="af-err">Naam zaroori hai</div></div>
+          <div class="af" id="f-relation"><label>Rishta *</label><select id="relation"><option value="">— Select —</option><option ${_formData.relation === 'Father (Pita)' ? 'selected' : ''}>Father (Pita)</option><option ${_formData.relation === 'Mother (Mata)' ? 'selected' : ''}>Mother (Mata)</option><option ${_formData.relation === 'Guardian (Paalak)' ? 'selected' : ''}>Guardian (Paalak)</option></select><div class="af-err">Rishta select karein</div></div>
+          <div class="af" id="f-qualification"><label>Parents' Qualification *</label><input type="text" id="qualification" value="${_formData.qualification || ''}" placeholder="Jaise: BA, 12th, B.Sc"><div class="af-err">Qualification zaroori hai</div></div>
+          <div class="af" id="f-parentPhone"><label>Mobile Number *</label><input type="tel" id="parentPhone" value="${_formData.parentPhone || ''}" placeholder="9876543210" maxlength="10"><div class="hint">Hum isi number pe call karenge</div><div class="af-err">Sahi 10-digit number daalein</div></div>
+          <div class="af"><label>Alt. Number (optional)</label><input type="tel" id="altPhone" value="${_formData.altPhone || ''}" placeholder="Alt. number" maxlength="10"></div>
+          <div class="af" style="grid-column:span 2" id="f-address"><label>Ghar ka Pata *</label><input type="text" id="address" value="${_formData.address || ''}" placeholder="Village, Tehsil, Jila"><div class="af-err">Pata zaroori hai</div></div>
+        </div>
+        <div class="adm-nav">
+          <button class="adm-btn adm-btn-sec" onclick="renderFormStep(1)">← Wapis</button>
+          <button class="adm-btn adm-btn-pri" onclick="nextStep(2)">Aage Badhein →</button>
+        </div>
+      </div>`;
+  } else if (step === 3) {
+    const rev = _formData || {};
+    content = `
+      <div class="adm-step active" id="step-wrap">
+        ${stepDots}
+        <div style="font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--light);">✅ Review Karein</div>
+        <div style="background:#f8faff;border-radius:12px;padding:18px;font-size:13px;display:grid;gap:8px;">
+          ${[['Bacche ka Naam', rev.childName], ['DOB', rev.dob], ['Age', rev.age], ['Gender', rev.gender], ['Class', rev.applyingClass], ['Guardian Naam', rev.guardianName + ' (' + rev.relation + ')'], ['Parents Qual.', rev.qualification], ['Phone', '📞 ' + rev.parentPhone + (rev.altPhone ? ' / ' + rev.altPhone : '')], ['Pata', rev.address]].map(([l, v]) => `<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #e8eeff;"><span style="color:var(--gray);font-weight:600;min-width:130px;">${l}</span><strong>${v || '—'}</strong></div>`).join('')}
+        </div>
+        <div style="margin-top:16px;">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);">
+            <input type="checkbox" id="agreeCheck" style="width:auto;margin-top:3px;flex-shrink:0;">
+            Main confirm karta/karti hoon ki di gayi saari jankari sahi hai. School administration ka decision final hoga.
+          </label>
+        </div>
+        <div class="adm-nav">
+          <button class="adm-btn adm-btn-sec" onclick="renderFormStep(2)">← Wapis</button>
+          <button class="adm-btn adm-btn-pri" id="submitBtn" onclick="submitForm()">🚀 Submit Application</button>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('admBody').innerHTML = content;
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function nextStep(from) {
+  if (from === 1) {
+    let ok = true;
+    const req = (field, input) => {
+      const v = getVal(input);
+      const w = document.getElementById('f-' + field);
+      if (!v) {
+        w && w.classList.add('err');
+        ok = false;
+      } else {
+        w && w.classList.remove('err');
+      }
+    };
+    req('childName', 'childName');
+    req('dob', 'dob');
+    req('age', 'age');
+    req('gender', 'gender');
+    req('applyingClass', 'applyingClass');
+    if (!ok) return;
+    _formData.childName = getVal('childName');
+    _formData.dob = getVal('dob');
+    _formData.age = getVal('age');
+    _formData.gender = getVal('gender');
+    _formData.applyingClass = getVal('applyingClass');
+    _formData.prevSchool = getVal('prevSchool');
+    renderFormStep(2);
+  } else if (from === 2) {
+    let ok = true;
+    const req = (field, input) => {
+      const v = getVal(input);
+      const w = document.getElementById('f-' + field);
+      if (!v) {
+        w && w.classList.add('err');
+        ok = false;
+      } else {
+        w && w.classList.remove('err');
+      }
+    };
+    req('guardianName', 'guardianName');
+    req('relation', 'relation');
+    req('qualification', 'qualification');
+    req('address', 'address');
+    const phone = getVal('parentPhone');
+    const wp = document.getElementById('f-parentPhone');
+    if (!phone || phone.length < 10 || !/^\d+$/.test(phone)) {
+      wp && wp.classList.add('err');
+      ok = false;
+    } else {
+      wp && wp.classList.remove('err');
+    }
+    if (!ok) return;
+    _formData.guardianName = getVal('guardianName');
+    _formData.relation = getVal('relation');
+    _formData.qualification = getVal('qualification');
+    _formData.parentPhone = getVal('parentPhone');
+    _formData.altPhone = getVal('altPhone');
+    _formData.address = getVal('address');
+    renderFormStep(3);
+  }
+}
+
+function withTimeout(p, ms) {
+  return Promise.race([p, new Promise(r => setTimeout(() => r(null), ms))]);
+}
+
+async function submitForm() {
+  if (!document.getElementById('agreeCheck')?.checked) {
+    alert('Kripya confirm checkbox tick karein!');
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  if (!btn) return;
+  btn.textContent = '⏳ Submit ho raha hai...';
+  btn.disabled = true;
+
+  try {
+    btn.textContent = '💾 Save ho raha hai...';
+    const admData = {
+      childName: _formData.childName || '',
+      dob: _formData.dob || '',
+      age: _formData.age || '',
+      gender: _formData.gender || '',
+      applyingClass: _formData.applyingClass || '',
+      prevSchool: _formData.prevSchool || '',
+      guardianName: _formData.guardianName || '',
+      relation: _formData.relation || '',
+      qualification: _formData.qualification || '',
+      parentPhone: _formData.parentPhone || '',
+      altPhone: _formData.altPhone || '',
+      address: _formData.address || '',
+      admissionYear: _admSettings.year || '2025-26',
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    const docRef = await withTimeout(db.collection('admissions').add(admData), 15000);
+    if (!docRef) throw new Error('Server ne response nahi diya. Internet check karein.');
+    const refId = docRef.id.substring(0, 8).toUpperCase();
+
+    const waMsg = encodeURIComponent(`📋 *JS International School — Admission Form*\n\n👦 Naam: ${admData.childName}\n📅 Umar: ${admData.age}\n📚 Class: ${admData.applyingClass}\n🎓 Parents Qual.: ${admData.qualification}\n📞 Phone: ${admData.parentPhone}\n\n🔖 ID: JSIS-${refId}\n\nCall ka intezaar karein 🙏`);
+    document.getElementById('admBody').innerHTML = `
+      <div class="adm-success">
+        <div class="si">🎉</div>
+        <h3>Application Submit Ho Gayi!</h3>
+        <p>Badhai ho! Aapke bacche ki admission application safaltapoorvak submit ho gayi hai.</p>
+        <div class="ref-box">Application ID: JSIS-${refId}</div>
+        <p>Hamare staff aapko jald hi <strong>${admData.parentPhone}</strong> pe call karenge.</p>
+        <div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <a href="https://wa.me/?text=${waMsg}" style="background:#25d366;color:white;padding:12px 22px;border-radius:10px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;">💬 WhatsApp Share</a>
+          <button onclick="closeAdmission()" style="background:var(--light);color:var(--navy);padding:12px 22px;border-radius:10px;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;">✕ Close</button>
+        </div>
+      </div>`;
+    _formData = {};
+
+  } catch (e) {
+    console.error(e);
+    btn.textContent = '🚀 Submit Application';
+    btn.disabled = false;
+    alert('❌ Submit nahi ho saka!\n\n' + e.message + '\n\n✅ Kya karein:\n• Internet connection check karein\n• Page reload karke dobara try karein\n• School ko call karein: +91 8299763358');
+  }
+}
+</script>
+</body>
+</html>
